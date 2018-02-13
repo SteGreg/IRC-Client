@@ -7,8 +7,10 @@
 
 #include "types.h"
 #include "queue.h"
+#include "server_dialogue.h"
 #include "client.h"
 #include "socket_reader.h"
+#include "ui.h"
 #include "io_reader.h"
 
 Queue eventi;
@@ -18,16 +20,18 @@ pthread_mutex_t mutex;
 
 int main(int nArgs, char** args){
     
-    if(nArgs == 1){
-        printf("Specificare il nome del server a cui collegarsi e la porta.\n");
-        return 1;
-    }
-   
+    ServerInfo server_info;
+    
+    server_dialogue_init("servers.config");
+    server_dialogue_ask(&server_info);
+    
     initQueue(&eventi);
     
-    client_connect(args[1], atoi(args[2]));
+    client_connect(server_info.server_name, server_info.server_port);
     
     pthread_mutex_init(&mutex, NULL);
+    
+    ui_main_menu();
     
     if(pthread_create(&th_sockReader, NULL, socket_reader_fnc, NULL) != 0)
         printf("Errore nella creazione del thread\n");
@@ -56,8 +60,8 @@ int main(int nArgs, char** args){
                     break;
                 }
                 case EVT_COMMAND:
-                {
-                    //Invia a socket_fd...
+                {                    
+                    printf("Bytes mandati: %d\n", write(socket_fd, currentEvent.msg, strlen(currentEvent.msg)));
                     break;
                 }
             }

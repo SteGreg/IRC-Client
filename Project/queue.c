@@ -63,7 +63,6 @@ void debugQueue(Queue q){
         currentNode = currentNode->next;
     }
     
-    if(nElems>0)
     printf("%d elementi nella coda..\n", nElems);
     
 }

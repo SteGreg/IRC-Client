@@ -1,0 +1,50 @@
+socket_fd;  //Globale, condivisa tra i thread
+coda;   //coda di eventi. Globale
+
+processo 1
+{
+    thread 0    //Main thread
+    {
+        crea socket_fd;
+        connetti;
+        
+        scrivi interfaccia (su stdout)
+        
+        crea thread 1;
+        crea thread 2;
+        
+        while(1)
+        {
+            scorri la coda degli eventi;
+            per ogni evento
+            {
+                SE è leggibile
+                    scrivilo su stdout;
+                SE è un comando
+                    scrivi comando a socket_fd;    
+            }    
+        }
+    }
+    
+    thread 1
+    {
+        leggi da socket_fd;
+        aggiungi evento a coda;
+    }
+    
+    thread 2
+    {
+        leggi da stdin;
+        aggiungi evento a coda;
+    }
+    
+}
+
+1) Joina un canale
+2) Cambia nickname
+3) Mostra lista canali
+Canale corrente: ... .I messaggi che scrivi saranno reindirizzati a questo canale.
+
+
+
+

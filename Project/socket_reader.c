@@ -11,6 +11,10 @@ extern int socket_fd;
 extern Queue eventi;
 extern pthread_mutex_t mutex;
 
+
+/*
+    TODO: gestire il PING da qui..
+*/
 void* socket_reader_fnc(void* data){
     
     while(1){
